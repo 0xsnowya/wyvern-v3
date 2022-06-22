@@ -12,6 +12,11 @@ import "./exchange/Exchange.sol";
  * @title WyvernExchange
  * @author Wyvern Protocol Developers
  */
+ /**
+ * 合约简介：WyvernExchange合约，继承Exchange合约，确认交互的公链
+ * 方法简介：构造函数constructor，
+ * 参数简介：
+ */
 contract WyvernExchange is Exchange {
 
     string public constant name = "Wyvern Exchange";
@@ -20,6 +25,7 @@ contract WyvernExchange is Exchange {
 
     string public constant codename = "Ancalagon";
 
+    // 构造函数：交易的公链信息，注册方数组（from）
     constructor (uint chainId, address[] memory registryAddrs, bytes memory customPersonalSignPrefix) public {
         DOMAIN_SEPARATOR = hash(EIP712Domain({
             name              : name,

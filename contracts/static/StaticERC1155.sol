@@ -4,6 +4,8 @@ StaticERC1155 - static calls for ERC1155 trades
 
 */
 
+
+
 pragma solidity 0.7.5;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
@@ -30,6 +32,7 @@ function transferERC1155Exact(bytes memory extra,
 	require(ArrayUtils.arrayEq(data, abi.encodeWithSignature("safeTransferFrom(address,address,uint256,uint256,bytes)", addresses[1], addresses[4], tokenId, amount, "")));
 }
 
+// 
 function swapOneForOneERC1155(bytes memory extra,
 	address[7] memory addresses, AuthenticatedProxy.HowToCall[2] memory howToCalls, uint[6] memory uints,
 	bytes memory data, bytes memory counterdata)

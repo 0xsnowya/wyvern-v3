@@ -22,10 +22,11 @@ contract WyvernRegistry is ProxyRegistry {
 
     constructor ()
         public
-    {   
+    {   // 认证代理
         AuthenticatedProxy impl = new AuthenticatedProxy();
         impl.initialize(address(this), this);
         impl.setRevoke(true);
+        // ?
         delegateProxyImplementation = address(impl);
     }   
 
@@ -35,6 +36,8 @@ contract WyvernRegistry is ProxyRegistry {
      * @dev No delay, can only be called once - after that the standard registry process with a delay must be used
      * @param authAddress Address of the contract to grant authentication
      */
+
+     // 初始化交易合约认证授权
     function grantInitialAuthentication (address authAddress)
         onlyOwner
         public

@@ -12,6 +12,13 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
  * @title TokenRecipient
  * @author Wyvern Protocol Developers
  */
+
+ /**
+ * 合约简介：token接收器，ERC20代币、及token（extraData）
+ * 功能简介：交易中介
+ * 参数简介：
+ */
+
 contract TokenRecipient {
     event ReceivedEther(address indexed sender, uint amount);
     event ReceivedTokens(address indexed from, uint256 value, address indexed token, bytes extraData);

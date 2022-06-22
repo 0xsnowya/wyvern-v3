@@ -15,6 +15,13 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
  * @title ArrayUtils
  * @author Wyvern Protocol Developers
  */
+
+ /**
+ * 合约简介：数组工具集库，便于import导入，直接进行调用相关方法
+ * 功能简介：在solidity语言里，用于操作数组的各种方法
+ * 参数简介：
+ */
+ 
 library ArrayUtils {
 
     /**
@@ -27,6 +34,7 @@ library ArrayUtils {
      * @param desired The target array
      * @param mask The mask specifying which bits can be changed
      */
+
     function guardedArrayReplace(bytes memory array, bytes memory desired, bytes memory mask)
         internal
         pure

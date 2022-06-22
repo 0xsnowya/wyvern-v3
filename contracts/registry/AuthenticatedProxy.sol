@@ -14,6 +14,13 @@ import "./proxy/OwnedUpgradeabilityStorage.sol";
  * @title AuthenticatedProxy
  * @author Wyvern Protocol Developers
  */
+
+ /**
+ * 合约简介：代理认证
+ * 功能简介：
+ * 参数简介：
+ */
+
 contract AuthenticatedProxy is TokenRecipient, OwnedUpgradeabilityStorage {
 
     /* Whether initialized. */

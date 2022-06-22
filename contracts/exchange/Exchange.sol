@@ -12,6 +12,11 @@ import "./ExchangeCore.sol";
  * @title Exchange
  * @author Wyvern Protocol Developers
  */
+ /**
+ * 合约简介：交易
+ * 功能简介：
+ * 参数简介：
+ */
 contract Exchange is ExchangeCore {
 
     /* external ABI-encodable method wrappers. */
@@ -66,7 +71,8 @@ contract Exchange is ExchangeCore {
     {
         return setOrderFill(hash, fill);
     }
-
+    
+    // 自动匹配交易
     function atomicMatch_(uint[16] memory uints, bytes4[2] memory staticSelectors,
         bytes memory firstExtradata, bytes memory firstCalldata, bytes memory secondExtradata, bytes memory secondCalldata,
         uint8[2] memory howToCalls, bytes32 metadata, bytes memory signatures)

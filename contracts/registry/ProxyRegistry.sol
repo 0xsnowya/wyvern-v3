@@ -17,6 +17,13 @@ import "./ProxyRegistryInterface.sol";
  * @title ProxyRegistry
  * @author Wyvern Protocol Developers
  */
+
+ /**
+ * 合约简介：委托代理执行合约
+ * 功能简介：是藏品创作者，进行注册，委托代理合约交易
+ * 参数简介：
+ */
+
 contract ProxyRegistry is Ownable, ProxyRegistryInterface {
 
     /* DelegateProxy implementation contract. Must be initialized. */

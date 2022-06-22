@@ -5,9 +5,9 @@
 */
 
 pragma solidity 0.7.5;
-
+// 导入openzeppelin中的SafeMath函数，用于值的校验，防止溢出
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
+// 导入库包的
 import "../lib/ArrayUtils.sol";
 import "../registry/AuthenticatedProxy.sol";
 
@@ -30,6 +30,7 @@ contract StaticERC20 {
         require(ArrayUtils.arrayEq(data, abi.encodeWithSignature("transferFrom(address,address,uint256)", addresses[1], addresses[4], amount)));
     }
 
+    // 交易验证
     function swapExact(bytes memory extra,
         address[7] memory addresses, AuthenticatedProxy.HowToCall[2] memory howToCalls, uint[6] memory uints,
         bytes memory data, bytes memory counterdata)

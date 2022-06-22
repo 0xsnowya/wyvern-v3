@@ -19,42 +19,63 @@ import "../registry/AuthenticatedProxy.sol";
  * @title ExchangeCore
  * @author Wyvern Protocol Developers
  */
+
+  /**
+ * 合约简介：交易核心要素，struc一个Order订单结构体，Call结构体
+ * 功能简介：
+ * 参数简介：
+ */
+
 contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
 
+    // 签名验证码
     bytes4 constant internal EIP_1271_MAGICVALUE = 0x1626ba7e;
+    // 签名前缀
     bytes internal personalSignPrefix = "\x19Ethereum Signed Message:\n";
 
     /* Struct definitions. */
-
+    
     /* An order, convenience struct. */
     struct Order {
         /* Order registry address. */
+        // 订单注册方的地址：from（藏品owner）
         address registry;
         /* Order maker address. */
+        // 订单发起方地址：to（购买者）
         address maker;
         /* Order static target. */
+        // 藏品目标
         address staticTarget;
         /* Order static selector. */
+        // 选择器：与藏品绑定
         bytes4 staticSelector;
         /* Order static extradata. */
+        // 其他数据信息
         bytes staticExtradata;
         /* Order maximum fill factor. */
+        // 订单进展进度值上限
         uint maximumFill;
         /* Order listing timestamp. */
+        // 订单时间戳
         uint listingTime;
         /* Order expiration timestamp - 0 for no expiry. */
+        // 订单结束时间
         uint expirationTime;
         /* Order salt to prevent duplicate hashes. */
+        // 加盐
         uint salt;
     }
 
     /* A call, convenience struct. */
     struct Call {
         /* Target */
+        // 目标藏品
         address target;
         /* How to call */
+        // 如何调用
         AuthenticatedProxy.HowToCall howToCall;
         /* Calldata */
+        // 调用数据：to
         bytes data;
     }
 
@@ -68,30 +89,36 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
     /* Variables */
 
     /* Trusted proxy registry contracts. */
+    // 可信的代理注册合约
     mapping(address => bool) public registries;
 
     /* Order fill status, by maker address then by hash. */
+    // 订单总量状态
     mapping(address => mapping(bytes32 => uint)) public fills;
 
     /* Orders verified by on-chain approval.
        Alternative to ECDSA signatures so that smart contracts can place orders directly.
        By maker address, then by hash. */
+    //to(藏品购买者地址，是否授权，授权的token数量)
     mapping(address => mapping(bytes32 => bool)) public approved;
 
     /* Events */
-
+    // 订单授权事件：参数为，藏品索引哈希,from，to，藏品发布的合约...
     event OrderApproved     (bytes32 indexed hash, address registry, address indexed maker, address staticTarget, bytes4 staticSelector, bytes staticExtradata, uint maximumFill, uint listingTime, uint expirationTime, uint salt, bool orderbookInclusionDesired);
+    // 订单总量改变事件
     event OrderFillChanged  (bytes32 indexed hash, address indexed maker, uint newFill);
+    // ？
     event OrdersMatched     (bytes32 firstHash, bytes32 secondHash, address indexed firstMaker, address indexed secondMaker, uint newFirstFill, uint newSecondFill, bytes32 indexed metadata);
 
     /* Functions */
-
+    // 订单哈希
     function hashOrder(Order memory order)
         internal
         pure
         returns (bytes32 hash)
     {
         /* Per EIP 712. */
+        // keccak256,abi.encode编码
         return keccak256(abi.encode(
             ORDER_TYPEHASH,
             order.registry,
@@ -106,6 +133,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         ));
     }
 
+    // to订单购买者，签名
     function hashToSign(bytes32 orderHash)
         internal
         view
@@ -130,7 +158,8 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         }
         return size > 0;
     }
-
+ 
+    // 有效的订单参数
     function validateOrderParameters(Order memory order, bytes32 hash)
         internal
         view
@@ -153,7 +182,8 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
 
         return true;
     }
-
+    
+    // 有效的订单签名
     function validateOrderAuthorization(bytes32 hash, address maker, bytes memory signature)
         internal
         view
@@ -205,7 +235,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         }
         return false;
     }
-
+    // 编码
     function encodeStaticCall(Order memory order, Call memory call, Order memory counterorder, Call memory countercall, address matcher, uint value, uint fill)
         internal
         pure
@@ -217,7 +247,8 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         uint[6] memory uints = [value, order.maximumFill, order.listingTime, order.expirationTime, counterorder.listingTime, fill];
         return abi.encodeWithSelector(order.staticSelector, order.staticExtradata, addresses, howToCalls, uints, call.data, countercall.data);
     }
-
+    
+    // 静态执行
     function executeStaticCall(Order memory order, Call memory call, Order memory counterorder, Call memory countercall, address matcher, uint value, uint fill)
         internal
         view
@@ -226,6 +257,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         return staticCallUint(order.staticTarget, encodeStaticCall(order, call, counterorder, countercall, matcher, value, fill));
     }
 
+    // 执行
     function executeCall(ProxyRegistryInterface registry, address maker, Call memory call)
         internal
         returns (bool)
@@ -251,7 +283,8 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         /* Execute order. */
         return proxy.proxy(call.target, call.howToCall, call.data);
     }
-
+    
+    // 授权订单哈希
     function approveOrderHash(bytes32 hash)
         internal
     {
@@ -266,6 +299,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         approved[msg.sender][hash] = true;
     }
 
+    // 订单授权
     function approveOrder(Order memory order, bool orderbookInclusionDesired)
         internal
     {
@@ -284,6 +318,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         emit OrderApproved(hash, order.registry, order.maker, order.staticTarget, order.staticSelector, order.staticExtradata, order.maximumFill, order.listingTime, order.expirationTime, order.salt, orderbookInclusionDesired);
     }
 
+    // 设置订单总量
     function setOrderFill(bytes32 hash, uint fill)
         internal
     {
@@ -301,6 +336,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         emit OrderFillChanged(hash, msg.sender, fill);
     }
 
+    // 自动匹配：secondOrder？
     function atomicMatch(Order memory firstOrder, Call memory firstCall, Order memory secondOrder, Call memory secondCall, bytes memory signatures, bytes32 metadata)
         internal
         reentrancyGuard

@@ -10,6 +10,13 @@ pragma solidity 0.7.5;
  * @title StaticCaller
  * @author Wyvern Protocol Developers
  */
+
+ /**
+ * 合约简介：发起交易
+ * 功能简介：针对某个地址对应的token，发起交易
+ * 参数简介：
+ */
+
 contract StaticCaller {
 
     function staticCall(address target, bytes memory data)

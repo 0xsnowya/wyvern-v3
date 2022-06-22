@@ -10,6 +10,12 @@ pragma solidity 0.7.5;
  * @title EIP712
  * @author Wyvern Protocol Developers
  */
+ 
+/**
+ * 合约简介：域名
+ * 功能简介：合约校验
+ * 参数简介：
+ */
 contract EIP712 {
 
     struct EIP712Domain {

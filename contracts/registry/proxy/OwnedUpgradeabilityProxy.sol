@@ -7,12 +7,20 @@ import "./OwnedUpgradeabilityStorage.sol";
  * @title OwnedUpgradeabilityProxy
  * @dev This contract combines an upgradeability proxy with basic authorization control functionalities
  */
+
+ /**
+ * 合约简介：owned代理性能升级
+ * 功能简介：
+ * 参数简介：
+ */
+
 contract OwnedUpgradeabilityProxy is Proxy, OwnedUpgradeabilityStorage {
     /**
      * @dev Event to show ownership has been transferred
      * @param previousOwner representing the address of the previous owner
      * @param newOwner representing the address of the new owner
      */
+     // 交易所有权代理
     event ProxyOwnershipTransferred(address previousOwner, address newOwner);
 
     /**

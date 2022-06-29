@@ -336,7 +336,7 @@ contract ExchangeCore is ReentrancyGuarded, StaticCaller, EIP712 {
         emit OrderFillChanged(hash, msg.sender, fill);
     }
 
-    // 自动匹配：secondOrder？
+    // 自动匹配：secondOrder
     function atomicMatch(Order memory firstOrder, Call memory firstCall, Order memory secondOrder, Call memory secondCall, bytes memory signatures, bytes32 metadata)
         internal
         reentrancyGuard

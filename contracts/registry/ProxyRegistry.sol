@@ -19,17 +19,17 @@ import "./ProxyRegistryInterface.sol";
  */
 
  /**
- * 合约简介：委托代理执行合约
+ * 合约简介：注册代理，
  * 功能简介：是藏品创作者，进行注册，委托代理合约交易
  * 参数简介：
  */
-
 contract ProxyRegistry is Ownable, ProxyRegistryInterface {
 
     /* DelegateProxy implementation contract. Must be initialized. */
     address public override delegateProxyImplementation;
 
     /* Authenticated proxies by user. */
+    // 用户认证的代理
     mapping(address => OwnableDelegateProxy) public override proxies;
 
     /* Contracts pending access. */
@@ -43,6 +43,11 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
        a malicious but rational attacker could buy half the Wyvern and grant themselves access to all the proxy contracts. A delay period renders this attack nonthreatening - given two weeks, if that happened, users would have
        plenty of time to notice and transfer their assets.
     */
+    /* 延期阶段，用于添加一个已认证的合约。
+       如果在任何一个节点，当代理合约持有的投票数超过WYV DAO总票数的一半。延期可以缓解对Wyvern DAO（拥有注册表：已授权代理用户的交易）的一个潜在的攻击。
+       一个恶意且合理的攻击者，可以购买Wyvern半数的投票，并授权自己可以访问所有代理合约。延期阶段可以解决这个可能的攻击威胁。两个星期内，如果这种事情发送，users可以有大量的时间去关注并转移资产。
+    */
+    // 代理合约有用户的授权，可以操作用户的资产，延期确认保护，可以给客户充足的时间去注意转移资产，用户防止攻击者拿到就权限去操作这些被授权的代理合约。
     uint public DELAY_PERIOD = 2 weeks;
 
     /**
@@ -51,6 +56,11 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
      * @dev ProxyRegistry owner only
      * @param addr Address to which to grant permissions
      */
+
+     /** 方法简介：授权认证，只有（藏品的）合约拥有者可以调用这个方法
+      *  功能简介：合约地址和加载地址都不为0的时候，合约被允许注册和加载，
+      *  参数简介：pengding (address => uint) key：地址，value：时间戳
+      */
     function startGrantAuthentication (address addr)
         public
         onlyOwner
@@ -65,6 +75,11 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
      * @dev ProxyRegistry owner only
      * @param addr Address to which to grant permissions
      */
+     /**
+     * 在延期阶段过后，结束访问特定合约的功能。
+     *
+     */
+     // 结束授权认证
     function endGrantAuthentication (address addr)
         public
         onlyOwner
@@ -79,7 +94,8 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
      *
      * @dev ProxyRegistry owner only
      * @param addr Address of which to revoke permissions
-     */    
+     */ 
+     // 取消授权   
     function revokeAuthentication (address addr)
         public
         onlyOwner
@@ -93,6 +109,7 @@ contract ProxyRegistry is Ownable, ProxyRegistryInterface {
      * @dev Must be called by the user which the proxy is for, creates a new AuthenticatedProxy
      * @return proxy New AuthenticatedProxy contract
      */
+     // 注册一个代理合约
     function registerProxy()
         public
         returns (OwnableDelegateProxy proxy)

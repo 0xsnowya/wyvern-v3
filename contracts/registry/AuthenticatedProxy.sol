@@ -16,8 +16,8 @@ import "./proxy/OwnedUpgradeabilityStorage.sol";
  */
 
  /**
- * 合约简介：代理认证
- * 功能简介：
+ * 合约简介：授权代理
+ * 功能简介：代表user操作其资产。继承了TokenRecipient的Token转账授权，及owner授权
  * 参数简介：
  */
 

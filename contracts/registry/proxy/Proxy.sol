@@ -6,11 +6,11 @@ pragma solidity 0.7.5;
  */
 
  /**
- * 合约简介：
- * 功能简介：
+ * 合约简介：代理合约执行交易
+ * 功能简介：执行交易
  * 参数简介：
  */
-abstract contract Proxy {
+ 
     /**
      * @dev Tells the address of the implementation where every call will be delegated.
      * @return address of the implementation to which it will be delegated

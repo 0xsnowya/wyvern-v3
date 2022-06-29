@@ -14,8 +14,8 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
  */
 
  /**
- * 合约简介：token接收器，ERC20代币、及token（extraData）
- * 功能简介：交易中介
+ * 合约简介：token转账
+ * 功能简介：接收ERC20的转账
  * 参数简介：
  */
 
